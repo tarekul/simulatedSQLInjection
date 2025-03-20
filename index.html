@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+    <title>Simulated SQL Injection</title>
+  </head>
+  <body>
+    <h2>Fake Login (Simulated SQL Injection)</h2>
+    <p>Try to login with username: <code>admin</code></p>
+    <form onSubmit="return login(event)">
+      <label
+        >Username: <input type="text" id="username" autocomplete="off" /></label
+      ><br />
+      <label
+        >Password: <input type="text" id="password" autocomplete="off" /></label
+      ><br />
+      <input type="submit" value="Login" />
+    </form>
+
+    <p id="result"></p>
+  </body>
+</html>
+
+<script>
+  let db;
+  initDb();
+
+  async function initDb() {
+    const SQL = await initSqlJs({
+      locateFile: (file) =>
+        `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}`,
+    });
+    db = new SQL.Database();
+    db.run("CREATE TABLE users (username TEXT, password TEXT)");
+    db.run("INSERT INTO users VALUES ('admin', 'admin123')");
+
+    console.log("Database initialized");
+  }
+
+  function login(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const query =
+      "SELECT * FROM users WHERE username = '" +
+      username +
+      "' AND password = '" +
+      password +
+      "'";
+
+    console.log("Executing:", query);
+
+    try {
+      const result = db.exec(query);
+
+      const msg =
+        result.length > 0 ? "✅ Login successful!" : "❌ Login failed";
+      document.getElementById("result").textContent = msg;
+    } catch (err) {
+      document.getElementById("result").textContent =
+        "❌ SQL error: " + err.message;
+    }
+
+    return false;
+  }
+</script>
