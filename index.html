@@ -71,12 +71,7 @@
     |----------|-----------|
     | admin    | admin123  |
     */
-    const query =
-      "SELECT * FROM users WHERE username = '" +
-      username +
-      "' AND password = '" +
-      password +
-      "'";
+    const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
 
     /*
     SELECT * FROM users WHERE username = 'admin' AND password = 'admin123'
