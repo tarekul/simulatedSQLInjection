@@ -8,35 +8,53 @@
   </head>
   <body>
     <h2>Fake Login (Simulated SQL Injection)</h2>
+    <!-- Simulated SQL Injection -->
     <p>Try to login with username: <code>admin</code></p>
     <form onSubmit="return login(event)">
+      <!-- onSubmit is an HTML attribute that allows you to run Javascript code when form is submitted-->
+
       <label
-        >Username: <input type="text" id="username" autocomplete="off" /></label
-      ><br />
+        >Username: <input type="text" id="username" autocomplete="off"
+      /></label>
+      <!-- label is an HTML element that allows you to add a label to an input element-->
+
+      <br />
+      <!-- br is an HTML element that allows you to add a line break-->
+
       <label
         >Password: <input type="text" id="password" autocomplete="off" /></label
       ><br />
       <input type="submit" value="Login" />
+      <!-- input is an HTML element that allows you to add an input element. In this case, it is a submit button which on submit runs the login function-->
     </form>
 
+    <!-- p is an HTML element that allows you to add a paragraph. id is an HTML attribute that allows you to add an id to an element. 
+     This will be used to display the result of the login attempt. Initially the element has no content. The element will have content added by the login function  -->
     <p id="result"></p>
   </body>
 </html>
 
 <script>
-  let db;
-  initDb();
+  let db; // initialize database variable
+  initDb(); // call initDb function
 
   async function initDb() {
+    // initialie the sql.js library with configuration options
     const SQL = await initSqlJs({
       locateFile: (file) =>
         `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}`,
     });
-    db = new SQL.Database();
-    db.run("CREATE TABLE users (username TEXT, password TEXT)");
-    db.run("INSERT INTO users VALUES ('admin', 'admin123')");
+    db = new SQL.Database(); // create a new database
 
-    console.log("Database initialized");
+    db.run("CREATE TABLE users (username TEXT, password TEXT)"); // create a new table
+    db.run("INSERT INTO users VALUES ('admin', 'admin123')"); // insert a new row
+    /*
+    | username | password  |
+    |----------|-----------|
+    | admin    | admin123  |
+    */
+
+    console.log("Database initialized"); // log to console indicating that the database has been initialized
   }
 
   function login(event) {
@@ -45,6 +63,11 @@
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
+    /*
+    | username | password  |
+    |----------|-----------|
+    | admin    | admin123  |
+    */
     const query =
       "SELECT * FROM users WHERE username = '" +
       username +
@@ -52,10 +75,15 @@
       password +
       "'";
 
-    console.log("Executing:", query);
+    /*
+    SELECT * FROM users WHERE username = 'admin' AND password = 'admin123'
+    SQL requires single quotes for string values. That is why we use single quotes around the username and password values.
+    */
+
+    console.log("Executing:", query); // log to console the query being executed
 
     try {
-      const result = db.exec(query);
+      const result = db.exec(query); // execute the query
 
       const msg =
         result.length > 0 ? "✅ Login successful!" : "❌ Login failed";
