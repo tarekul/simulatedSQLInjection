@@ -6,5 +6,5 @@ Built using HTML, Javascript, and SQL.js(lightweight file-based SQL db engine th
 
 ### Hint to login without password or incorrect password
 
-username is <code>admin</code>
-use <code>--</code> to bypass password validation
+- username is <code>admin</code>
+- use <code>--</code> to bypass password validation. In SQL <code>--</code> starts a comment and anything after it becomes a comment.
