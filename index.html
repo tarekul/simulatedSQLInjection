@@ -59,25 +59,37 @@
 
     console.log("Database initialized"); // log to console indicating that the database has been initialized
   }
-
+s
   function login(event) {
     event.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value; //admin --
+    const password = document.getElementById("password").value; // 
 
     /*
     | username | password  |
     |----------|-----------|
-    | admin    | admin123  |
-    */
-    const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+    | admin    | admin123  |    
 
-    /*
-    SELECT * FROM users WHERE username = 'admin' AND password = 'admin123'
-    SQL requires single quotes for string values. That is why we use single quotes around the username and password values.
     */
-
+   let valid = true;
+   
+   for(let i = 0; i < password.length; i++){
+    if(password[i] == "'"){
+     valid = false;
+    }
+   }
+   for(let i = 0; i < username.length; i++){
+    if(username[i] == "'"){
+     valid = false;
+    }
+   }
+   if(valid == false){
+    document.getElementById("result").textContent = "login failed you digusting hacker"
+    return;              
+   }
+    
+    const query = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "'"
     console.log("Executing:", query); // log to console the query being executed
 
     try {
